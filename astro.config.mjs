@@ -3,7 +3,9 @@ import react from "@astrojs/react";
 import tailwind from "@astrojs/tailwind";
 import mdx from "@astrojs/mdx";
 import svelte from "@astrojs/svelte";
+import cloudflare from "@astrojs/cloudflare";
 
+// https://astro.build/config
 export default defineConfig({
   integrations: [react(), tailwind(), mdx(), svelte()],
   image: {
@@ -13,6 +15,8 @@ export default defineConfig({
     }]
   },
   vite: {
-    assetsInclude: ['**/*.bmp'], // Allow importing image types not allowed by default
-  }
+    assetsInclude: ['**/*.bmp'] // Allow importing image types not allowed by default
+  },
+  output: "server",
+  adapter: cloudflare()
 });
