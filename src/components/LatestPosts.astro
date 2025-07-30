@@ -1,11 +1,13 @@
 ---
 import { Image, getImage } from "astro:assets";
 import { postImageImport } from "../helpers/postImageImport.mjs";
+
 const latestPosts = (await Astro.glob("../pages/posts/*.mdx"))
   .sort(
     (a, b) =>
-      new Date(b.frontmatter.publish_date).valueOf() -
-      new Date(a.frontmatter.publish_date).valueOf()
+      // FIX: Handle missing dates by treating them as the earliest possible time
+      new Date(b.frontmatter.publish_date || 0).valueOf() -
+      new Date(a.frontmatter.publish_date || 0).valueOf()
   )
   .slice(0, 4);
 const { fullWidth = true, animated = false } = Astro.props;
@@ -61,7 +63,7 @@ const { fullWidth = true, animated = false } = Astro.props;
 
           return (
             <article class="max-w-xs">
-              {cover && (
+              {cover && coverImageSrc && (
                 <>
                   <a href={`/posts/${slug}`}>
                     <img

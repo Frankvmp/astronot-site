@@ -7,7 +7,7 @@ import { postImageImport } from "../helpers/postImageImport.mjs";
 import { Alert } from "flowbite-svelte";
 import { PenSolid } from "flowbite-svelte-icons";
 const POSTS_PATH = "posts";
-const COVER_IMG_ASPECT_RATIO = "13/9"; // TODO: Expose as variable
+const COVER_IMG_ASPECT_RATIO = "13/9";
 
 const { showTagsFilter = true } = Astro.props;
 const posts = await Astro.glob("./posts/*.mdx");
@@ -56,19 +56,20 @@ const tagsList = posts.reduce((acc, post) => {
           {
             posts
               .sort((postA, postB) => {
-                const aDate = new Date(postA.frontmatter.publish_date);
-                const bDate = new Date(postB.frontmatter.publish_date);
+                // FIX: Handle missing dates by treating them as the earliest possible time
+                const aDate = new Date(postA.frontmatter.publish_date || 0);
+                const bDate = new Date(postB.frontmatter.publish_date || 0);
                 return bDate.getTime() - aDate.getTime();
               })
               .map(async (post) => {
-                const { cover, title } = post?.frontmatter;
-                const dateStr = new Date(
-                  post.frontmatter.publish_date,
+                const { cover, title, publish_date } = post?.frontmatter;
+                const dateStr = publish_date ? new Date(
+                  publish_date,
                 ).toLocaleString("en-US", {
                   month: "short",
                   day: "numeric",
                   year: "numeric",
-                });
+                }) : "";
 
                 let optimizedCoverImage: any = null;
                 let coverImageSrc: string = "";
@@ -83,28 +84,13 @@ const tagsList = posts.reduce((acc, post) => {
                       src: imageFilePath,
                       width: 1400,
                     });
-
-                    coverImageSrc = (
-                      await getImage({
-                        src: imageFilePath,
-                        width: 1400,
-                      })
-                    ).src;
+                    coverImageSrc = optimizedCoverImage.src;
                     preloadCoverImageSrc = (
-                      await getImage({
-                        src: imageFilePath,
-                        width: 1920,
-                        height: 1080,
-                      })
+                      await getImage({ src: imageFilePath, width: 1920, height: 1080 })
                     ).src;
                     preloadCoverImageMobileSrc = (
-                      await getImage({
-                        src: imageFilePath,
-                        width: 720,
-                        height: 480,
-                      })
+                      await getImage({ src: imageFilePath, width: 720, height: 480 })
                     ).src;
-                    coverImageSrc = (optimizedCoverImage as any).src;
                   }
                 }
 
@@ -127,10 +113,9 @@ const tagsList = posts.reduce((acc, post) => {
                             <PenSolid slot="icon" class="h-4 w-4" />
                             Edit this <span class="font-extrabold">
                               draft
-                            </span>{" "}
-                            post in{" "}
+                            </span> post in{" "}
                             <a
-                              href="notion.so"
+                              href="https://notion.so"
                               target="blank"
                               class="font-semibold"
                             >
@@ -139,7 +124,7 @@ const tagsList = posts.reduce((acc, post) => {
                           </Alert>
                         )}
 
-                        {cover && (
+                        {cover && coverImageSrc && (
                           <>
                             <img
                               class={`mb-1 h-auto w-full rounded-md rounded-b-none object-cover`}
@@ -153,7 +138,6 @@ const tagsList = posts.reduce((acc, post) => {
                               href={preloadCoverImageSrc}
                               as="image"
                             />
-
                             <link
                               rel="prefetch"
                               href={preloadCoverImageMobileSrc}
@@ -181,7 +165,6 @@ const tagsList = posts.reduce((acc, post) => {
                           }
                         />
 
-                        {/* Author Section */}
                         <div class="flex items-center space-x-3">
                           <img
                             class="h-11 w-11 rounded-full"
@@ -191,16 +174,12 @@ const tagsList = posts.reduce((acc, post) => {
                           <div class="font-medium dark:text-white">
                             <div>Fizzbuzz Aldrin</div>
                             <div class="text-sm font-normal text-gray-500 dark:text-gray-400">
-                              <span
-                                class={
-                                  !post.frontmatter.publish_date
-                                    ? "hidden"
-                                    : ""
-                                }
-                              >
-                                <span>{dateStr}</span>
-                                <span> · </span>
-                              </span>
+                              {dateStr && (
+                                <span>
+                                  <span>{dateStr}</span>
+                                  <span> · </span>
+                                </span>
+                              )}
                               <span>{post.frontmatter.reading_time}</span>
                             </div>
                           </div>
