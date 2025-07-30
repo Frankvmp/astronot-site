@@ -18,5 +18,7 @@ export default defineConfig({
     assetsInclude: ['**/*.bmp'] // Allow importing image types not allowed by default
   },
   output: "server",
-  adapter: cloudflare()
+  adapter: cloudflare({
+    imageService: "passthrough"
+  })
 });
