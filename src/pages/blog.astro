@@ -6,12 +6,10 @@ import TagsFilter from "../components/TagsFilter.svelte";
 import { postImageImport } from "../helpers/postImageImport.mjs";
 import { Alert } from "flowbite-svelte";
 import { PenSolid } from "flowbite-svelte-icons";
-
 const POSTS_PATH = "posts";
 const COVER_IMG_ASPECT_RATIO = "13/9"; // TODO: Expose as variable
 
 const { showTagsFilter = true } = Astro.props;
-
 const posts = await Astro.glob("./posts/*.mdx");
 
 const seenTags = {};
@@ -78,37 +76,36 @@ const tagsList = posts.reduce((acc, post) => {
                 let preloadCoverImageMobileSrc: string = "";
 
                 if (cover) {
-                  const imageFilePath = (await postImageImport(cover)).default;
+                  const imageFilePath = (await postImageImport(cover))?.default;
 
-                  optimizedCoverImage = await getImage({
-                    src: imageFilePath,
-                    width: 1400,
-                  });
-
-                  coverImageSrc = (
-                    await getImage({
+                  if (imageFilePath) {
+                    optimizedCoverImage = await getImage({
                       src: imageFilePath,
                       width: 1400,
-                    })
-                  ).src;
+                    });
 
-                  preloadCoverImageSrc = (
-                    await getImage({
-                      src: imageFilePath,
-                      width: 1920,
-                      height: 1080,
-                    })
-                  ).src;
-
-                  preloadCoverImageMobileSrc = (
-                    await getImage({
-                      src: imageFilePath,
-                      width: 720,
-                      height: 480,
-                    })
-                  ).src;
-
-                  coverImageSrc = (optimizedCoverImage as any).src;
+                    coverImageSrc = (
+                      await getImage({
+                        src: imageFilePath,
+                        width: 1400,
+                      })
+                    ).src;
+                    preloadCoverImageSrc = (
+                      await getImage({
+                        src: imageFilePath,
+                        width: 1920,
+                        height: 1080,
+                      })
+                    ).src;
+                    preloadCoverImageMobileSrc = (
+                      await getImage({
+                        src: imageFilePath,
+                        width: 720,
+                        height: 480,
+                      })
+                    ).src;
+                    coverImageSrc = (optimizedCoverImage as any).src;
+                  }
                 }
 
                 return (
@@ -196,7 +193,9 @@ const tagsList = posts.reduce((acc, post) => {
                             <div class="text-sm font-normal text-gray-500 dark:text-gray-400">
                               <span
                                 class={
-                                  !post.frontmatter.publish_date ? "hidden" : ""
+                                  !post.frontmatter.publish_date
+                                    ? "hidden"
+                                    : ""
                                 }
                               >
                                 <span>{dateStr}</span>
