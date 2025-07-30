@@ -21,23 +21,23 @@ export async function postImageImport(imageFileName) {
 
   switch (ext) {
     case ".webp":
-      return await import(`../images/posts/${name}.webp`);
+      return await import(`../../src/images/posts/${name}.webp`);
     case ".jpg":
-      return await import(`../images/posts/${name}.jpg`);
+      return await import(`../../src/images/posts/${name}.jpg`);
     case ".png":
-      return await import(`../images/posts/${name}.png`);
+      return await import(`../../src/images/posts/${name}.png`);
     case ".svg":
-      return await import(`../images/posts/${name}.svg`);
+      return await import(`../../src/images/posts/${name}.svg`);
     case ".gif":
-      return await import(`../images/posts/${name}.gif`);
+      return await import(`../../src/images/posts/${name}.gif`);
     case ".avif":
-      return await import(`../images/posts/${name}.avif`);
+      return await import(`../../src/images/posts/${name}.avif`);
     case ".jpeg":
-      return await import(`../images/posts/${name}.jpeg`);
+      return await import(`../../src/images/posts/${name}.jpeg`);
     case ".bmp":
-      return await import(`../images/posts/${name}.bmp`);
+      return await import(`../../src/images/posts/${name}.bmp`);
     default:
-      return await import(`../images/posts/${name}.jpg`);
+      return await import(`../../src/images/posts/${name}.jpg`);
   }
 
   /*

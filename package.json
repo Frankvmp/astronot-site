@@ -8,11 +8,11 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "sync": "rimraf src/pages/posts/* && node src/astronot.js",
-    "sync:published": "rimraf src/pages/posts/* && node src/astronot.js --published",
-    "generate": "rimraf dist/** && ([ -d 'dist' ] || mkdir dist) && ([ -d 'dist/images' ] || mkdir dist/images) && ([ -d 'src/pages/posts' ] || mkdir src/pages/posts) && ([ -d 'src/images' ] || mkdir src/images) && ([ -d 'src/images/posts' ] || mkdir src/images/posts) && rimraf src/pages/posts/* && node src/astronot.js --published && astro build"
+    "sync": "rimraf src/pages/posts/* && node scripts/astronot.js",
+    "sync:published": "rimraf src/pages/posts/* && node scripts/astronot.js --published",
+    "generate": "rimraf dist/** && ([ -d 'dist' ] || mkdir dist) && ([ -d 'dist/images' ] || mkdir dist/images) && ([ -d 'src/pages/posts' ] || mkdir src/pages/posts) && ([ -d 'src/images' ] || mkdir src/images) && ([ -d 'src/images/posts' ] || mkdir src/images/posts) && rimraf src/pages/posts/* && node scripts/astronot.js --published && astro build"
   },
-  "dependencies": {
+  "dependencies": { 
     "@astrojs/cloudflare": "^10.4.2",
     "@astrojs/mdx": "^3.0.0",
     "@astrojs/react": "^3.3.4",
