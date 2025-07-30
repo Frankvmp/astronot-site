@@ -1,7 +1,6 @@
 ---
 import { Image as AstroImage } from "astro:assets";
-import { postImageImport } from "../helpers/images.mjs";
-
+import { postImageImport } from "../helpers/postImageImport.mjs";
 const {
   src,
   MAX_WIDTH = 1400, // 2x max width of blog section width (2x for retina devices). Max width on Medium is 680px, so target that as max width for articles.

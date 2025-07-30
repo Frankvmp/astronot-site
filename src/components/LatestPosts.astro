@@ -1,7 +1,6 @@
 ---
 import { Image, getImage } from "astro:assets";
-import { postImageImport } from "../helpers/images.mjs";
-
+iimport { postImageImport } from "../helpers/postImageImport.mjs";
 const latestPosts = (await Astro.glob("../pages/posts/*.mdx"))
   .sort(
     (a: any, b: any) =>
