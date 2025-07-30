@@ -4,10 +4,9 @@ import fs from 'fs';
 import readingTime from 'reading-time';
 import { config } from 'dotenv';
 import { parseArgs } from 'node:util';
-import { sanitizeUrl, sanitizeImageString } from './helpers/sanitize.mjs';
-import { hashString, downloadImage } from './helpers/images.mjs';
-import { delay } from './helpers/delay.mjs';
-
+import { sanitizeUrl, sanitizeImageString } from '../src/helpers/sanitize.mjs';
+import { hashString, downloadImage } from '../src/helpers/images.mjs';
+import { delay } from '../src/helpers/delay.mjs';
 // Input Arguments
 const ARGUMENT_OPTIONS = {
   published: { // Only sync published posts

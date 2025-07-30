@@ -1,14 +1,14 @@
 ---
 import { Image, getImage } from "astro:assets";
-iimport { postImageImport } from "../helpers/postImageImport.mjs";
+import { postImageImport } from "../helpers/postImageImport.mjs";
+
 const latestPosts = (await Astro.glob("../pages/posts/*.mdx"))
   .sort(
-    (a: any, b: any) =>
-      new Date(b.frontmatter.publish_date) -
-      new Date(a.frontmatter.publish_date),
+    (a, b) =>
+      new Date(b.frontmatter.publish_date).valueOf() -
+      new Date(a.frontmatter.publish_date).valueOf()
   )
   .slice(0, 4);
-
 const { fullWidth = true, animated = false } = Astro.props;
 ---
 
@@ -29,13 +29,14 @@ const { fullWidth = true, animated = false } = Astro.props;
         latestPosts.map(async (post) => {
           const { title, cover, slug, id, reading_time, description } =
             post.frontmatter;
-          let imageFilePath = (await postImageImport(cover)).default;
+
+          let imageFilePath = cover ? (await postImageImport(cover))?.default : null;
 
           let coverImageSrc = "";
           let preloadCoverImageSrc = "";
           let preloadCoverImageMobileSrc = "";
 
-          if (cover) {
+          if (cover && imageFilePath) {
             coverImageSrc = (
               await getImage({
                 src: imageFilePath,
@@ -50,7 +51,6 @@ const { fullWidth = true, animated = false } = Astro.props;
                 height: 1080,
               })
             ).src;
-
             preloadCoverImageMobileSrc = (
               await getImage({
                 src: imageFilePath,
