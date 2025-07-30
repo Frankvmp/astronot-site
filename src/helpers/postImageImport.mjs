@@ -1,15 +1,20 @@
 // src/helpers/postImageImport.mjs
 
-import path from "path";
-
 // IMPORTANT: This bit is required to allow dynamic importing of images via Astro & Vite
 // postImageImport allows dynamically import images from local filesystem via Vite with variable names
 export async function postImageImport(imageFileName) {
   // Image paths must be relative, and end with file extension to work in Vite build process
   // See https://github.com/rollup/plugins/tree/master/packages/dynamic-import-vars#meta
-  const filename = path.parse(imageFileName);
-  const name = filename.name;
-  const ext = filename.ext;
+  if (!imageFileName) {
+    console.warn("No image file name provided, skipping import.");
+    return;
+  }
+
+  // Re-implement path.parse using browser-safe string manipulation
+  const lastDotIndex = imageFileName.lastIndexOf('.');
+  const lastSlashIndex = imageFileName.lastIndexOf('/');
+  const name = imageFileName.substring(lastSlashIndex + 1, lastDotIndex);
+  const ext = imageFileName.substring(lastDotIndex);
 
   if (!name) {
     console.warn("No image, skipping", imageFileName);
